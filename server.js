@@ -9,23 +9,29 @@ const io=new Server({
 
 
 
-let onlineUsers= [];
+let onlineUsers = [];
 
 const addUser=(userId,socketId)=>{
-   const userExists=onlineUsers.find((user)=> user.userId === userId);
-   if(!userExists){
-      onlineUsers.push({userId,socketId});
-   };
+  
+    const userExists = onlineUsers.find((user) => user.userId === userId);
+
+    if (!userExists) {
+        onlineUsers.push({ userId, socketId });  
+    } else {
+        userExists.socketId = socketId;
+    }
+
 };
 
 
 const removeUser=(socketId)=>{
-   onlineUsers= onlineUsers.filter((user)=> user.socketId !== socketId);
+    onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
 
 const getUser=(userId)=>{
-   return onlineUsers.find((user)=> user.userId === userId)
+    
+    return onlineUsers.find((user) => user.userId === userId);
 };
 
 io.on("connection",(socket)=>{
@@ -35,10 +41,10 @@ io.on("connection",(socket)=>{
     });
 
     socket.on("sendMessage",({ receiverId, data })=>{
-        const receiver= getUser(receiverId);
-        io.to(receiver.socketId).emit("getMessage",data);
+        const receiver= getUser(receiverId); 
+          io.to(receiver.socketId).emit("getMessage", data);
     });
-
+ 
     socket.on("disconnect",()=>{
         removeUser(socket.id);
     });
@@ -48,4 +54,5 @@ io.on("connection",(socket)=>{
 
 
 
-io.listen("4000");
+io.listen(4000);
+console.log("Socket server is running on port 4000");
