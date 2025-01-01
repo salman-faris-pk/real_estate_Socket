@@ -18,7 +18,7 @@ const addUser=(userId,socketId)=>{
     if (!userExists) {
         onlineUsers.push({ userId, socketId });  
     } else {
-        userExists.socketId = socketId;
+        userExists.socketId = socketId; 
     }
 
 };
